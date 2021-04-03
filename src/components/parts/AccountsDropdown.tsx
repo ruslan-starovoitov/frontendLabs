@@ -98,8 +98,16 @@ class AccountsDropdown extends Component<Props, State> {
                 >
                     <AccountDropdownItem key={"multi_account_item"} account={multiAccount} onClick={this.selectAccount} specialClassName={this.getSelectedClassName(multiAccount)}/>
                     <Divider />
-                    {accountsStore.userAccounts.map(account =>
-                        <AccountDropdownItem key={keyPrefix + account.id} account={account} onClick={this.selectAccount} specialClassName={this.getSelectedClassName(account)}/>)}
+                    {
+                        accountsStore.userAccounts.map(account =>
+                            <AccountDropdownItem
+                                key={keyPrefix + account.id}
+                                account={account}
+                                onClick={this.selectAccount}
+                                specialClassName={this.getSelectedClassName(account)}
+                            />
+                        )
+                    }
                     <Divider />
                     <MenuItem button key={"log_out_item"} onClick={this.logOut} component={Link} to={"/sign"}>Log Out</MenuItem>
                 </Menu>

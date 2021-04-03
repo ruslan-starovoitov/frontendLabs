@@ -55,7 +55,6 @@ const styles = (theme: Theme) =>
             height: "100vh",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
             alignItems: "center"
         },
         active: {

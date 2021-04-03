@@ -38,7 +38,15 @@ export default class AccountsStore {
     }
 
     @action addAccount(username: string, imageUrl: string): void {
-        this.accounts.push(new Account(this.accounts[this.accounts.length - 1].id, username, imageUrl));
+        let id;
+        if(this.accounts.length===0){
+            id = 941;
+        }else{
+            id = this.accounts[this.accounts.length - 1].id+10;
+        }
+        let newAcc = new Account(id, username, imageUrl);
+        this.accounts.push(newAcc);
+        this.addAccountToAll(newAcc);
     }
 
     @computed get selectedAccount(): Account {

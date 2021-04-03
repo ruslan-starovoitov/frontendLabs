@@ -16,7 +16,6 @@ import Button from "@material-ui/core/Button";
 import AccountsStore from '../../stores/AccountsStore';
 import {inject, observer} from "mobx-react";
 import Account from "../../data/Account";
-import {makeObservable} from "mobx";
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -65,6 +64,7 @@ type StoreProps = {
 interface Props extends StoreProps {
     classes: any;
     account: Account;
+    key: number;
 }
 
 interface State {

@@ -16,6 +16,7 @@ import Button from "@material-ui/core/Button";
 import AccountsStore from '../../stores/AccountsStore';
 import {inject, observer} from "mobx-react";
 import Account from "../../data/Account";
+import {makeObservable} from "mobx";
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -84,15 +85,35 @@ class PseudonymSettingsItem extends Component<Props, State>{
         this.setState({expanded : !this.state.expanded});
     }
 
+    deleteAccountTag =(accountId: number, tagText: string) =>{
+        this.props.AccountsStore.deleteAccountTag(accountId, tagText);
+    }
+
+    deleteAccount =(accountId: number) =>{
+        this.props.AccountsStore.deleteAccount(accountId);
+    }
+
+    addNewTag =(accountId: number) =>{
+        let newTagText = prompt("Please, enter new tag name", "tagName");
+        if(newTagText===null || newTagText.length===0 || newTagText.indexOf(' ')!==-1){
+            alert("Unacceptable tag name. Tag should be one word.")
+            return;
+        }
+        let ok = this.props.AccountsStore.addNewTag(accountId, newTagText);
+        if(!ok){
+            alert("Such tag already exists")
+        }
+    }
+
     render() {
-        return (
-            <Card className={this.props.classes.root}>
+        const account = this.props.AccountsStore.getAccountById(this.props.account.id);
+        return <Card className={this.props.classes.root}>
                 <CardHeader
                     avatar={
-                        <Avatar  aria-label="recipe" className={this.props.classes.avatar} src={this.props.account.imageUrl}>
+                        <Avatar  aria-label="recipe" className={this.props.classes.avatar} src={account.imageUrl}>
                         </Avatar>
                     }
-                    title={this.props.account.username}
+                    title={account.username}
                     action={
                         <IconButton
                             className={clsx(this.props.classes.expand, {
@@ -108,20 +129,33 @@ class PseudonymSettingsItem extends Component<Props, State>{
                 />
                 <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
                     <CardContent>
-                        <Typography paragraph>Method:</Typography>
+                        <Typography paragraph>Tags:</Typography>
                         <div className={this.props.classes.column} />
                         <div className={this.props.classes.column}>
-                            <Chip label="Barbados" onDelete={() => {}} />
+                            {
+                                account.tags.map(tag =>
+                                    <Chip label={tag} onDelete={() => {
+                                        this.deleteAccountTag(account.id, tag);
+                                    }} />
+                                )
+                            }
+
                         </div>
                     </CardContent>
                     <CardActions>
-                        <Button size="small" color="primary">
+                        <Button size="small" color="primary" onClick={()=>{
+                            this.addNewTag(account.id);
+                        }}>
                             Add new tag
+                        </Button>
+                        <Button size="small" color="secondary" onClick={()=>{
+                            this.deleteAccount(account.id);
+                        }}>
+                            Delete pseudonym
                         </Button>
                     </CardActions>
                 </Collapse>
-            </Card>
-        );
+            </Card>;
     }
 }
 

@@ -15,9 +15,9 @@ export default class AccountsStore {
         this.unknownAccount = new Account(-1, 'Unknown Account');
         this.selected = this.multiAccount;
         this.accounts = observable([ // temporary
-            new Account(1, 'First Username', 'https://i.imgur.com/sicII7N.jpg'),
-            new Account(2, 'Second Username', 'https://i.imgur.com/3tgjufY.jpg'),
-            new Account(3, 'Third Username', 'https://i.imgur.com/WfdkN3o.jpg')
+            new Account(1, 'First Username', 'https://i.imgur.com/sicII7N.jpg', ['tech', 'it', 'programming', 'VC']),
+            new Account(2, 'Second Username', 'https://i.imgur.com/3tgjufY.jpg', ['music', 'rock', 'rap']),
+            new Account(3, 'Third Username', 'https://i.imgur.com/WfdkN3o.jpg', ['church', 'God', 'Lucifer', 'prayer'])
         ]);
         this.allAccounts = observable.map();
         this.accounts.forEach(account => this.allAccounts.set(account.id, account));
@@ -29,7 +29,7 @@ export default class AccountsStore {
         set(this.allAccounts, account.id, account);
     }
 
-    getAccountById(id: number): Account {
+    @action getAccountById(id: number): Account {
         return get(this.allAccounts, id) ?? this.unknownAccount;
     }
 
@@ -47,5 +47,29 @@ export default class AccountsStore {
 
     @action selectAccount(id: number): void {
         this.selected = this.accounts.find(account => account.id === id) ?? this.multiAccount;
+    }
+
+    @action deleteAccountTag(id: number, tagText: string): void{
+        let index = this.accounts.findIndex(acc=>acc.id===id);
+
+        let tagIndex = this.accounts[index].tags.findIndex(tag=>tag===tagText);
+        if (-1 < tagIndex) {
+            this.accounts[index].tags.splice(tagIndex, 1);
+        }else{
+            throw new Error("Such tag doesn't exists. tag text = "+tagText);
+        }
+    }
+
+    @action deleteAccount(id:number):void{
+        let index = this.accounts.findIndex(acc=>acc.id===id);
+        if(-1<index){
+            this.accounts.splice(index, 1);
+        }
+    }
+
+    @action addNewTag(id:number, tagText:string):boolean{
+        let indexAcc = this.accounts.findIndex(acc=>acc.id===id);
+        this.accounts[indexAcc].tags.push(tagText);
+        return true;
     }
 }

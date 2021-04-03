@@ -2,7 +2,7 @@ import {Component} from "react";
 
 import React from 'react';
 import List from '@material-ui/core/List';
-import PseudonymSettingsItem from "./parts/PseudonymSettings";
+import PseudonymSettingsItem from "./parts/PseudonymSettingsItem";
 import {inject, observer} from "mobx-react";
 import AccountsStore from "../stores/AccountsStore";
 
@@ -33,7 +33,9 @@ export default class Settings extends Component<Props, State> {
         return <List>
             {
                 accountsStore.userAccounts.map(account =>
-                    <PseudonymSettingsItem account={account}/>
+                    <PseudonymSettingsItem
+                        account={account}
+                    />
                 )
             }
             </List>;
